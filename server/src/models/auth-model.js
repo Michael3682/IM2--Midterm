@@ -63,4 +63,10 @@ const updatePassword = async (email, newPassword) => {
   return result;
 }
 
-module.exports = { createUserTable, findUserByEmail, createUser, setResetToken, findUserByResetToken, updatePassword };
+const saveOnboardingInfo = async (userId, name, bio, avatar) => {
+  const sql = 'UPDATE users SET name = ?, bio = ?, avatar = ? WHERE id = ?';
+  const result = await db.query(sql, [name, bio, avatar, userId]);
+  return result;
+};
+
+module.exports = { createUserTable, findUserByEmail, createUser, setResetToken, findUserByResetToken, updatePassword, saveOnboardingInfo };

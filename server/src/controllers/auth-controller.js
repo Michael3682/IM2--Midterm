@@ -1,6 +1,7 @@
 const User = require("../models/auth-model");
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
+const User = require("../models/auth-model");
 const generateUUID = require("../utils/generateUUID");
 
 const handleField = (fields) => {
@@ -137,4 +138,14 @@ const resetPassword = async (req, res) => {
   res.status(200).json({ message: "Password has been reset successfully." });
 }
 
-module.exports = { register, login, forgotPassword, resetPassword };
+const saveOnboardingInfo = async (req, res) => {
+  try {
+    const { userId, name, bio, avatar } = req.body;
+    await User.saveOnboardingInfo(userId, name, bio, avatar);
+    res.json({ message: "Onboarding info saved!" });
+  } catch (error) {
+    res.status(500).json({ message: "Error saving onboarding info." });
+  }
+};
+
+module.exports = { register, login, forgotPassword, resetPassword, saveOnboardingInfo };
