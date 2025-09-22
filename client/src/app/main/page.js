@@ -1,70 +1,35 @@
 "use client";
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useSession, signOut } from 'next-auth/react';
-import { jwtDecode } from 'jwt-decode';
+import { signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function MainPage() {
-  const router = useRouter();
-  const { data: session, status } = useSession();
-  const [userName, setUserName] = useState('');
+    const router = useRouter();
 
-  useEffect(() => {
-    const token = localStorage.getItem('authToken');
-    if (token) {
-      try {
-        const decoded = jwtDecode(token);
-        setUserName(decoded.name || decoded.email || 'User');
-        return;
-      } catch {
-        router.push('/login');
-        return;
-      }
-    }
-    // If no token, check NextAuth session
-    if (status === 'loading') return; // Wait for session
-    if (status === 'authenticated') {
-      setUserName(session.user?.name || 'User');
-    } else {
-      router.push('/login');
-    }
-  }, [router, status, session]);
+    const handleProfile = () => {
+        router.push("/profile");
+    };
 
-  const handleLogout = () => {
-    localStorage.removeItem('authToken');
-    signOut({ callbackUrl: '/register' });
-  };
+    const handleLogout = async () => {
+        // Remove local JWT if present
+        localStorage.removeItem("authToken");
+        localStorage.removeItem("onboardingInfo");
+        await signOut({ redirect: false });
+        router.push("/login");
+    };
 
-  const goToProfile = () => {
-    router.push('/profile');
-  };
-
-  return (
-    <div className="min-h-screen bg-[#202020] text-white flex flex-col">
-      <nav className="flex justify-between items-center bg-[#1f1f1f] px-8 py-4 shadow-md">
-        <div className="text-2xl font-bold cursor-pointer" onClick={() => router.push('/')}>
-          GraphicWeb
+    return (
+        <div className="h-full w-full bg-[url('/background.jpg')] bg-cover bg-center">
+            <nav className="flex items-center justify-between p-4 py-1">
+                <img className="w-15 invert-[65%]" src="/graphicweb-logo.png"/>
+                <div className="flex gap-5">
+                    <button className="bg-[#1f1f1f] border-1 border-white/20 rounded-md p-1 px-4 cursor-pointer text-white/80 text-sm transition-all duration-250 hover:border-white/50" onClick={handleProfile}>Profile</button>
+                    <button className="border-b-1 border-white/20 p-1 px-4 cursor-pointer text-white/80 text-sm transition-all duration-250 hover:border-white/50" onClick={handleLogout}>Log out</button>
+                </div>
+            </nav>
+            <main className="w-full h-[calc(100vh-150px)] flex justify-center items-center flex-col gap-3">
+                <h1 className="text-5xl text-center font-bold text-white/70">ELEVATE YOUR BRAND WITH STUNNING DESIGN</h1>
+                <p className="text-white/50">INNOVATIVE WEB AND GRAPHIC SOLUTIONS TAILORED TO YOUR VISION</p>
+            </main>
         </div>
-        <div className="space-x-4">
-          <button
-            onClick={goToProfile}
-            className="bg-[#3a3a3a] px-4 py-2 rounded hover:bg-[#555]"
-          >
-            Profile
-          </button>
-          <button
-            onClick={handleLogout}
-            className="bg-[#aa2222] px-4 py-2 rounded hover:bg-[#cc4444]"
-          >
-            Logout
-          </button>
-        </div>
-      </nav>
-      <main className="flex-grow flex justify-center items-center">
-        <h1 className="text-3xl font-semibold">
-          Hi {userName}, Welcome to Graphic Web
-        </h1>
-      </main>
-    </div>
-  );
+    );
 }

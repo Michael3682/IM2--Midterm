@@ -11,12 +11,14 @@ export default function ResetPasswordPage() {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const API = process.env.NEXT_PUBLIC_API_URL;
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setMessage("");
     try {
-      const res = await axios.post("/api/auth/reset-password", { token, newPassword });
+      const res = await axios.post(`${API}/api/auth/reset-password`, { token, newPassword });
       setMessage(res.data.message || "Password reset successful!");
       setTimeout(() => router.push("/login"), 2000);
     } catch (error) {
@@ -26,25 +28,25 @@ export default function ResetPasswordPage() {
   };
 
   return (
-    <div className='flex justify-center gap-5 container mx-auto p-8 w-100 relative rounded-md shadow-2xl border-1 border-white/10 bg-[#303030] min-h-screen'>
+    <div className='flex justify-center gap-5 container mx-auto p-8 w-100 relative rounded-md shadow-2xl border-1 border-white/10 bg-[#303030]'>
       <form className='flex flex-col gap-5 w-full max-w-md mx-auto' onSubmit={handleSubmit}>
         <div>
-          <h1 className='text-2xl text-center font-bold text-white'>Graphic Web</h1>
+          <h1 className='text-2xl text-center font-bold text-white/80'>Graphic Web</h1>
           <p className='text-center text-sm text-white/50'>Enter your new password below.</p>
         </div>
         <div>
-          <p className='text-gray-100 font-semibold mb-1'>New Password</p>
+          <p className='text-white/80 font-semibold mb-1'>New Password</p>
           <input
             type='password'
             name='newPassword'
-            placeholder='New Password'
-            className='text-gray-300 border-1 border-white/10 rounded-md p-1 px-2 outline-none w-full'
+            placeholder='Enter New Password'
+            className='text-gray-300 border-1 border-white/10 rounded-md p-1 px-2 outline-none w-full transition-all duration-250 focus:border-white/50'
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
             required
           />
         </div>
-        <button className='mt-3 w-full bg-[#1f1f1f] border-1 border-transparent rounded-md p-1 px-2 cursor-pointer text-white' type='submit' disabled={loading}>
+        <button className='mt-3 w-full bg-[#1f1f1f] border-1 border-transparent rounded-md p-1 px-2 cursor-pointer text-white/80 transition-all duration-250 hover:border-white/50' type='submit' disabled={loading}>
           {loading ? 'Resetting...' : 'Reset Password'}
         </button>
         {message && <p className='text-center text-sm text-white/50 mt-4'>{message}</p>}

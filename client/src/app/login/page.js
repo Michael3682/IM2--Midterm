@@ -7,7 +7,7 @@ import axios from 'axios';
 
 export default function LoginPage() {
   const router = useRouter();
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   useEffect(() => {
     const currentPath = window.location.pathname;
     if (
@@ -60,44 +60,44 @@ export default function LoginPage() {
     <div className='flex justify-center flex-col gap-5 container mx-auto p-8 w-100 relative rounded-md shadow-2xl border-1 border-white/10 bg-[#303030]'>
       <form className='flex flex-col gap-5 w-full' onSubmit={handleSubmit}>
         <div>
-          <h1 className='text-2xl text-center font-bold text-white'>Graphic Web</h1>
+          <h1 className='text-2xl text-center font-bold text-white/80'>Graphic Web</h1>
           <p className='text-center text-sm text-white/50'>Welcome back! Please login to your account</p>
         </div>
         <div>
-          <p className='text-gray-100 font-semibold mb-1'>Email</p>
+          <p className='text-white/80 font-semibold mb-1'>Email</p>
           {errors.email && <p className='text-xs text-red-400 mb-1'>{errors.email}</p>}
           <input
             type="email"
             name="email"
             placeholder="Email"
-            className='text-gray-300 border-1 border-white/10 rounded-md p-1 px-2 outline-none w-full'
+            className='text-gray-300 border-1 border-white/10 rounded-md p-1 px-2 outline-none w-full transition-all duration-250 focus:border-white/50'
             value={form.email}
             onChange={handleChange}
           />
         </div>
         <div>
-          <p className='text-gray-100 font-semibold mb-1 flex justify-between items-center'>
+          <p className='text-white/80 font-semibold mb-1 flex justify-between items-center'>
             <span>Password</span>
-            <span className='text-blue-500 cursor-pointer text-xs hover:underline' onClick={() => router.push('/forgot-password')}>Forgot Password?</span>
+            <span className='text-blue-500/80 cursor-pointer text-xs hover:underline' onClick={() => router.push('/forgot-password')}>Forgot Password?</span>
           </p>
           {errors.password && <p className='text-xs text-red-400 mb-1'>{errors.password}</p>}
           <input
             type="password"
             name="password"
             placeholder="Password"
-            className='text-gray-300 border-1 border-white/10 rounded-md p-1 px-2 outline-none w-full'
+            className='text-gray-300 border-1 border-white/10 rounded-md p-1 px-2 outline-none w-full transition-all duration-250 focus:border-white/50'
             value={form.password}
             onChange={handleChange}
           />
         </div>
-        <button className='mt-3 w-full bg-[#1f1f1f] border-1 border-transparent rounded-md p-1.5 px-2 cursor-pointer text-white' type="submit" >Login</button>
+        <button className='mt-3 w-full bg-[#1f1f1f] border-1 border-transparent rounded-md p-1.5 px-2 cursor-pointer text-white/80 transition-all duration-250 hover:border-white/50' type="submit" >Login</button>
          <div className="flex flex-col items-center w-full">
           <div className="flex items-center w-full">
             <hr className="flex-grow border-t border-white/20" />
             <span className="mx-2 text-white/50 text-sm">or</span>
             <hr className="flex-grow border-t border-white/20" />
           </div>
-          <button type="button" className="flex justify-center align-center gap-2 mt-3 w-full bg-[#1f1f1f] border-1 border-transparent rounded-md p-1.5 px-2 cursor-pointer text-white" onClick={() => signIn('google', { callbackUrl: '/main' })}>
+          <button type="button" className="flex justify-center align-center gap-2 mt-3 w-full bg-[#1f1f1f] border-1 border-transparent rounded-md p-1.5 px-2 cursor-pointer text-white/80 transition-all duration-250 hover:border-white/50" onClick={() => signIn('google', { callbackUrl: '/main' })}>
             <img src="/google-logo.png" alt="Google Logo" className="w-5 h-5" />Continue with Google</button>
         </div>
         <div className='text-center text-sm text-white/50'>
@@ -106,7 +106,7 @@ export default function LoginPage() {
           </p>
         </div>
       </form>
-      {message && <p className='text-center text-sm text-red-400 mt-4'>{message}</p>}
+      {message && <p className='text-center text-sm text-white/50 mt-4'>{message}</p>}
     </div>
   );
 }

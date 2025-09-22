@@ -65,7 +65,7 @@ export default function OnboardingPage() {
             type="text"
             name="name"
             placeholder="Full Name"
-            className='text-gray-300 border-1 border-white/10 rounded-md p-1 px-2 outline-none w-full'
+            className='text-gray-300 border-1 border-white/10 rounded-md p-1 px-2 outline-none w-full transition-all duration-250 focus:border-white/50'
             value={form.name}
             onChange={handleChange}
           />
@@ -77,7 +77,7 @@ export default function OnboardingPage() {
             type="number"
             name="age"
             placeholder="Age"
-            className='text-gray-300 border-1 border-white/10 rounded-md p-1 px-2 outline-none w-full'
+            className='text-gray-300 border-1 border-white/10 rounded-md p-1 px-2 outline-none w-full transition-all duration-250 focus:border-white/50'
             value={form.age}
             onChange={handleChange}
           />
@@ -89,13 +89,13 @@ export default function OnboardingPage() {
             type="text"
             name="address"
             placeholder="Address"
-            className='text-gray-300 border-1 border-white/10 rounded-md p-1 px-2 outline-none w-full'
+            className='text-gray-300 border-1 border-white/10 rounded-md p-1 px-2 outline-none w-full transition-all duration-250 focus:border-white/50'
             value={form.address}
             onChange={handleChange}
           />
         </div>
 
-        <button className='mt-3 w-full bg-[#1f1f1f] border-1 border-transparent rounded-md p-1 px-2 cursor-pointer text-white' type="submit">Save Info</button>
+        <button className='mt-3 w-full bg-[#1f1f1f] border-1 border-transparent rounded-md p-1 px-2 cursor-pointer text-white transition-all duration-250 hover:border-white/50' type="submit">Save Info</button>
         {message && <p className='text-center text-sm text-white/50 mt-4'>{message}</p>}
       </form>
     </div>
