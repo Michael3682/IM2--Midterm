@@ -48,6 +48,7 @@ export default function ChangePasswordPage() {
         else if (form.newPassword.length < 8) fieldErrors.newPassword = "New password must be at least 8 characters.";
         if (!form.confirmPassword) fieldErrors.confirmPassword = "Please confirm your new password.";
         else if (form.newPassword !== form.confirmPassword) fieldErrors.confirmPassword = "Passwords do not match.";
+        if (form.oldPassword && form.newPassword && form.oldPassword === form.newPassword) fieldErrors.newPassword = "New password cannot be the same as old password.";
         setErrors(fieldErrors);
         if (Object.keys(fieldErrors).length > 0) return;
         setLoading(true);
