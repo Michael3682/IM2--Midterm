@@ -5,9 +5,11 @@ const createUserTable = async () => {
   const sql = `
         CREATE TABLE IF NOT EXISTS users(
         id varchar(50) PRIMARY KEY,
-        name varchar(100) NOT NULL,
+        name varchar(100),
         email varchar(100) UNIQUE NOT NULL,
         password varchar(100) NOT NULL,
+        age int,
+        address varchar(100),
         resetToken varchar(100),
         resetTokenExpiry bigint
         )
@@ -26,12 +28,12 @@ const findUserByEmail = async (email) => {
   return user[0];
 };
 
-const createUser = async (name, email, password) => {
+const createUser = async (email, password) => {
   const id = generateUUID();
 
   const user = await db.query(
-    `INSERT INTO users (id, name, email, password) VALUES (?, ?, ?, ?)`,
-    [id, name, email, password]
+    `INSERT INTO users (id, email, password) VALUES (?, ?, ?)`,
+    [id, email, password]
   );
 
   return user;
@@ -39,7 +41,7 @@ const createUser = async (name, email, password) => {
 
 const setResetToken = async (email, token, expiry) => {
   const result = await db.query(
-    'UPDATE users SET resetRoken = ?, resetTokenExpiry = ? WHERE email = ?',
+    'UPDATE users SET resetToken = ?, resetTokenExpiry = ? WHERE email = ?',
     [token, expiry, email]
   );
 
@@ -47,7 +49,7 @@ const setResetToken = async (email, token, expiry) => {
 }
 
 const findUserByResetToken = async (token) => {
-  const user = await db.query(`SELECT * FROM users WHERE resetToken = ?`, 
+  const user = await db.query(`SELECT * FROM users WHERE resetToken = ?`,
     [token]
   );
 
@@ -63,10 +65,18 @@ const updatePassword = async (email, newPassword) => {
   return result;
 }
 
-const saveOnboardingInfo = async (userId, name, bio, avatar) => {
-  const sql = 'UPDATE users SET name = ?, bio = ?, avatar = ? WHERE id = ?';
-  const result = await db.query(sql, [name, bio, avatar, userId]);
+const saveOnboardingInfo = async (userId, name, age, address) => {
+  const sql = 'UPDATE users SET name = ?, age = ?, address = ? WHERE id = ?';
+  const result = await db.query(sql, [name, age, address, userId]);
   return result;
 };
 
-module.exports = { createUserTable, findUserByEmail, createUser, setResetToken, findUserByResetToken, updatePassword, saveOnboardingInfo };
+module.exports = {
+  createUserTable,
+  findUserByEmail,
+  createUser,
+  setResetToken,
+  findUserByResetToken,
+  updatePassword,
+  saveOnboardingInfo
+};

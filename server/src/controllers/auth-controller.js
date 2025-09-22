@@ -1,6 +1,6 @@
-const User = require("../models/auth-model");
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
+const jwt = require("jsonwebtoken");
 const User = require("../models/auth-model");
 const generateUUID = require("../utils/generateUUID");
 
@@ -27,16 +27,15 @@ const isPasswordValid = (password) => {
 };
 
 const register = async (req, res) => {
-  const { name, email, password } = req.body;
+  const { email, password } = req.body;
 
-  const errors = handleField({ name, email, password });
+  const errors = handleField({ email, password });
 
   if (email && !isEmailValid(email)) {
     errors.push({
       field: "email",
       message: "Invalid email format."
-    }
-    );
+    });
   }
 
   if (password && !isPasswordValid(password)) {
@@ -54,9 +53,10 @@ const register = async (req, res) => {
     if (emailExists) return res.status(400).json({ message: "Email already exist" });
 
     const hashedPassword = await bcrypt.hash(password, 10);
-
-    await User.createUser(name, email, hashedPassword);
-    res.status(201).json({ message: "User has been created." });
+    await User.createUser(email, hashedPassword);
+    const user = await User.findUserByEmail(email);
+    const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET || "secret", { expiresIn: "1h" });
+    res.status(201).json({ message: "User has been created.", token });
   } catch (error) {
     console.error(error);
   }
@@ -75,10 +75,11 @@ const login = async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(401).json({ message: "Invalid password." });
 
+    const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET || "secret", { expiresIn: "1h" });
     res.status(200).json({
       message: "Login sucessfully",
-      name: user.name,
       email: user.email,
+      token
     });
   } catch (error) {
     console.error(error);
@@ -107,14 +108,14 @@ const forgotPassword = async (req, res) => {
     }
   })
 
-  const resetLink = `http://localhost:5000/reset-password?token=${token}`;
+  const resetLink = `http://localhost:3000/reset-password?token=${token}`;
   await transporter.sendMail({
     to: email,
     subject: "Password Reset",
     text: `Click here to reset your password: ${resetLink}`,
   });
 
-  res.status(200).json({ message: "Password reset link has been sent to your email."});
+  res.status(200).json({ message: "Password reset link has been sent to your email." });
 }
 
 const resetPassword = async (req, res) => {
@@ -140,12 +141,18 @@ const resetPassword = async (req, res) => {
 
 const saveOnboardingInfo = async (req, res) => {
   try {
-    const { userId, name, bio, avatar } = req.body;
-    await User.saveOnboardingInfo(userId, name, bio, avatar);
+    const { userId, name, age, address } = req.body;
+    await User.saveOnboardingInfo(userId, name, age, address);
     res.json({ message: "Onboarding info saved!" });
   } catch (error) {
     res.status(500).json({ message: "Error saving onboarding info." });
   }
 };
 
-module.exports = { register, login, forgotPassword, resetPassword, saveOnboardingInfo };
+module.exports = {
+  register,
+  login,
+  forgotPassword,
+  resetPassword,
+  saveOnboardingInfo
+};
