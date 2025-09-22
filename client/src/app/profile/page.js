@@ -1,8 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import axios from "axios";
 import { jwtDecode } from "jwt-decode";
+import axios from "axios";
 
 export default function ProfilePage() {
   const { data: session } = useSession();
@@ -10,11 +10,10 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
   const [showChangePassword, setShowChangePassword] = useState(false);
   const [userEmail, setUserEmail] = useState(null);
-  const [checked, setChecked] = useState(false); // to track if client check is done
+  const [checked, setChecked] = useState(false);
   const API = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
-    // Only run on client
     let token = null;
     let email = null;
     if (typeof window !== "undefined") {
@@ -48,7 +47,6 @@ export default function ProfilePage() {
       .finally(() => setLoading(false));
   }, [session]);
 
-  // Only render after client check is done
   if (!checked) return null;
   if (!userEmail) {
     return <div className="text-white text-center mt-10">No user email found. Please log in again.</div>;

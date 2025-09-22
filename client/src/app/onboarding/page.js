@@ -14,14 +14,11 @@ export default function OnboardingPage() {
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
-    // Clear the error as user types
     setErrors({ ...errors, [e.target.name]: '' });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Field validation
     let fieldErrors = {};
     if (!form.name.trim()) fieldErrors.name = 'Name is required.';
     if (!form.age) {

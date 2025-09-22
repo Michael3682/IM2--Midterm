@@ -17,7 +17,6 @@ export default function ForgotPasswordPage() {
       const res = await axios.post(`${API}/api/auth/forgot-password`, { email });
       setMessage(res.data.message || "If your email exists, a reset link has been sent.");
     } catch (error) {
-      // Show full error for debugging
       if (error.response?.data) {
         if (Array.isArray(error.response.data)) {
           setMessage(error.response.data.map(e => e.message).join(" | "));

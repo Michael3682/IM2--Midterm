@@ -42,7 +42,7 @@ EMAIL_PASSWORD=your_gmail_app_password
 
 ### c. Start the Server
 ```
-npm start
+npm run dev
 ```
 The server will run on `http://localhost:5000` by default.
 
@@ -52,7 +52,7 @@ The server will run on `http://localhost:5000` by default.
 
 ### a. Install dependencies
 ```
-cd ../client
+cd client
 npm install
 ```
 
@@ -91,7 +91,7 @@ The client will run on `http://localhost:3000` by default.
 
 ## 6. Scripts
 - `npm run dev` (client): Start Next.js in development mode
-- `npm start` (server): Start Express server
+- `npm run dev` (server): Start Express server
 
 ---
 

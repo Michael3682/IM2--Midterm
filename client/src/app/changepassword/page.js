@@ -17,7 +17,6 @@ export default function ChangePasswordPage() {
     React.useEffect(() => {
         if (typeof window === "undefined") return;
         let email = null;
-        // Use session only inside the effect
         try {
             const sess = session;
             if (sess && sess.user && sess.user.email) {

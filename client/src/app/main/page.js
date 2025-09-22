@@ -10,7 +10,6 @@ export default function MainPage() {
     };
 
     const handleLogout = async () => {
-        // Remove local JWT if present
         localStorage.removeItem("authToken");
         localStorage.removeItem("onboardingInfo");
         await signOut({ redirect: false });

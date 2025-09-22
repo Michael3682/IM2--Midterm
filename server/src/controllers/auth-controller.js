@@ -1,26 +1,3 @@
-// Change password for logged-in user
-const changePassword = async (req, res) => {
-  const { email, oldPassword, newPassword } = req.body;
-  if (!email || !oldPassword || !newPassword) {
-    return res.status(400).json({ message: "All fields are required." });
-  }
-  if (!isPasswordValid(newPassword)) {
-    return res.status(400).json({ message: "Password must be at least 8 characters." });
-  }
-  try {
-    const user = await User.findUserByEmail(email);
-    if (!user) return res.status(404).json({ message: "User not found." });
-    // Prevent Google users from changing password
-    if (!user.password) return res.status(400).json({ message: "Google account password cannot be changed." });
-    const isMatch = await bcrypt.compare(oldPassword, user.password);
-    if (!isMatch) return res.status(401).json({ message: "Old password is incorrect." });
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
-    await User.updatePassword(user.email, hashedPassword);
-    res.status(200).json({ message: "Password changed successfully." });
-  } catch (err) {
-    res.status(500).json({ message: "Error changing password." });
-  }
-};
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
 const jwt = require("jsonwebtoken");
@@ -46,7 +23,7 @@ const isEmailValid = (email) => {
 };
 
 const isPasswordValid = (password) => {
-  return password.length >= 8;  
+  return password.length >= 8;
 };
 
 const register = async (req, res) => {
@@ -190,6 +167,28 @@ const getProfile = async (req, res) => {
     });
   } catch (err) {
     res.status(500).json({ message: "Error fetching profile" });
+  }
+};
+
+const changePassword = async (req, res) => {
+  const { email, oldPassword, newPassword } = req.body;
+  if (!email || !oldPassword || !newPassword) {
+    return res.status(400).json({ message: "All fields are required." });
+  }
+  if (!isPasswordValid(newPassword)) {
+    return res.status(400).json({ message: "Password must be at least 8 characters." });
+  }
+  try {
+    const user = await User.findUserByEmail(email);
+    if (!user) return res.status(404).json({ message: "User not found." });
+    if (!user.password) return res.status(400).json({ message: "Google account password cannot be changed." });
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
+    if (!isMatch) return res.status(401).json({ message: "Old password is incorrect." });
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await User.updatePassword(user.email, hashedPassword);
+    res.status(200).json({ message: "Password changed successfully." });
+  } catch (err) {
+    res.status(500).json({ message: "Error changing password." });
   }
 };
 
