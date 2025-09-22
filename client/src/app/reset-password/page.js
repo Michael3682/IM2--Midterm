@@ -10,6 +10,7 @@ export default function ResetPasswordPage() {
   const [newPassword, setNewPassword] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({});
 
   const API = process.env.NEXT_PUBLIC_API_URL;
 
@@ -17,6 +18,17 @@ export default function ResetPasswordPage() {
     e.preventDefault();
     setLoading(true);
     setMessage("");
+    let fieldErrors = {};
+    if (!newPassword) {
+      fieldErrors.newPassword = 'Password is required.';
+    } else if (newPassword.length < 8) {
+      fieldErrors.newPassword = 'Password must be at least 8 characters long.';
+    }
+    setErrors(fieldErrors);
+    if (Object.keys(fieldErrors).length > 0) {
+      setLoading(false);
+      return;
+    }
     try {
       const res = await axios.post(`${API}/api/auth/reset-password`, { token, newPassword });
       setMessage(res.data.message || "Password reset successful!");
@@ -36,6 +48,7 @@ export default function ResetPasswordPage() {
         </div>
         <div>
           <p className='text-white/80 font-semibold mb-1'>New Password</p>
+          {errors.newPassword && <p className='text-xs text-red-400 mb-1'>{errors.newPassword}</p>}
           <input
             type='password'
             name='newPassword'
@@ -43,7 +56,6 @@ export default function ResetPasswordPage() {
             className='text-gray-300 border-1 border-white/10 rounded-md p-1 px-2 outline-none w-full transition-all duration-250 focus:border-white/50'
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
-            required
           />
         </div>
         <button className='mt-3 w-full bg-[#1f1f1f] border-1 border-transparent rounded-md p-1 px-2 cursor-pointer text-white/80 transition-all duration-250 hover:border-white/50' type='submit' disabled={loading}>

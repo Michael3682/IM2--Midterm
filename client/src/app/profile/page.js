@@ -11,6 +11,7 @@ export default function ProfilePage() {
   const [showChangePassword, setShowChangePassword] = useState(false);
   const [userEmail, setUserEmail] = useState(null);
   const [checked, setChecked] = useState(false);
+  
   const API = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
