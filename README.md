@@ -13,7 +13,7 @@ This guide will help you set up and run both the client (Next.js) and server (Ex
 
 ## 1. Clone the Repository
 ```
-git clone <your-repo-url>
+git clone https://github.com/Michael3682/IM2--Midterm.git
 cd IM2--Midterm
 ```
 
